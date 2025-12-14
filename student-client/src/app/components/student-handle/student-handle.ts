@@ -58,7 +58,6 @@ export class StudentHandleComponent {
     });
   }
 
-
   loadStudents(): void {
     this.studentService.getStudents().subscribe({
       next: data => {
@@ -72,7 +71,6 @@ export class StudentHandleComponent {
       }
     });
   }
-
 
   saveStudent(): void {
     if (!this.name || !this.className || !this.section) {
