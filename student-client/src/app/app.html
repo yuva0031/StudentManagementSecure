@@ -6,7 +6,7 @@
     <a routerLink="/register" routerLinkActive="active">Register</a>
 
     <a
-      *ngIf="hydrated && (isLoggedIn$ | async)"
+      *ngIf="isLoggedIn()"
       routerLink="/students"
       routerLinkActive="active"
     >

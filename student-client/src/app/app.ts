@@ -1,8 +1,7 @@
-import { Component, afterNextRender } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,17 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
 
-  hydrated = false;
-  isLoggedIn$: Observable<boolean>;
+  isLoggedIn = computed(() => this.authService.isLoggedIn());
 
-  constructor(private authService: AuthService) {
-    this.isLoggedIn$ = this.authService.loggedIn$;
-
-    afterNextRender(() => {
-      queueMicrotask(() => {
-        this.hydrated = true;
-        this.authService.initAuthAfterHydration();
-      });
-    });
-  }
+  constructor(private authService: AuthService) {}
 }

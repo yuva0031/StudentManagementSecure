@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,30 +11,19 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent {
 
-  email = '';
-  password = '';
+  email = signal('');
+  password = signal('');
 
   constructor(private authService: AuthService) {}
 
   register() {
-    if (!this.email || !this.password) {
-      alert('Email and password are required');
-      console.log('required');
-      return;
-    }
-  console.log('Email:', this.email);
-  console.log('Password:', this.password);
-
-    this.authService.register(this.email, this.password).subscribe({
+    this.authService.register(this.email(), this.password()).subscribe({
       next: () => {
-        alert('Registration successful. Please login.');
-        this.email = '';
-        this.password = '';
+        alert('Registration successful');
+        this.email.set('');
+        this.password.set('');
       },
-      error: (err) => {
-        console.error(err);
-        alert('Registration failed');
-      }
+      error: () => alert('Registration failed')
     });
   }
 }

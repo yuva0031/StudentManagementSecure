@@ -1,7 +1,6 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,14 +8,17 @@ export class AuthService {
   private apiUrl = 'https://localhost:64638/api/auth';
   private isBrowser: boolean;
 
-  private loggedInSubject = new BehaviorSubject<boolean>(false);
-  loggedIn$ = this.loggedInSubject.asObservable();
+  isLoggedIn = signal(false);
 
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    if (this.isBrowser) {
+      this.isLoggedIn.set(!!localStorage.getItem('token'));
+    }
   }
 
   login(email: string, password: string) {
@@ -27,38 +29,20 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, { email, password });
   }
 
-  initAuthAfterHydration() {
-    if (!this.isBrowser) return;
-
-    const token = localStorage.getItem('token');
-    this.loggedInSubject.next(!!token);
-  }
-
-
   saveToken(token: string) {
     if (!this.isBrowser) return;
-
     localStorage.setItem('token', token);
-    this.loggedInSubject.next(true);
+    this.isLoggedIn.set(true);
   }
 
   logout() {
     if (!this.isBrowser) return;
-
     localStorage.removeItem('token');
-    this.loggedInSubject.next(false);
+    this.isLoggedIn.set(false);
   }
 
   getToken(): string | null {
     if (!this.isBrowser) return null;
     return localStorage.getItem('token');
-  }
-
-  isLoggedIn(): boolean {
-    return this.loggedInSubject.value;
-  }
-
-  isBrowserEnv(): boolean {
-    return this.isBrowser;
   }
 }

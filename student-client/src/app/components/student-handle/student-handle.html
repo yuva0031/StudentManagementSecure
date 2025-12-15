@@ -1,11 +1,11 @@
 <div class="container">
   <h2>Student Management</h2>
 
-  <div *ngIf="hydrated && students.length === 0">
+  <div *ngIf="hydrated() && students().length === 0">
     Loading Students...
   </div>
 
-  <div *ngIf="hydrated">
+  <div *ngIf="hydrated()">
 
     <button class="secondary" style="float:right" (click)="logout()">
       Logout
@@ -31,15 +31,15 @@
 
       <div class="btn-group">
         <button class="primary" (click)="saveStudent()">
-          {{ isEditMode ? 'Update Student' : 'Add Student' }}
+          {{ isEditMode() ? 'Update Student' : 'Add Student' }}
         </button>
-        <button class="secondary" *ngIf="isEditMode" (click)="resetForm()">
+        <button class="secondary" *ngIf="isEditMode()" (click)="resetForm()">
           Cancel
         </button>
       </div>
     </div>
 
-    <table *ngIf="students.length > 0">
+    <table *ngIf="students().length > 0">
       <thead>
         <tr>
           <th>ID</th>
@@ -51,7 +51,7 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let s of students">
+        <tr *ngFor="let s of students()">
           <td>{{ s.id }}</td>
           <td>{{ s.name }}</td>
           <td>{{ s.className }}</td>
@@ -64,7 +64,7 @@
       </tbody>
     </table>
 
-    <div *ngIf="students.length === 0">
+    <div *ngIf="students().length === 0">
       No students found.
     </div>
   </div>

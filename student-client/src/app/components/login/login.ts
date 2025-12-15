@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,8 +12,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
 
-  email = '';
-  password = '';
+  email = signal('');
+  password = signal('');
 
   constructor(
     private authService: AuthService,
@@ -21,20 +21,12 @@ export class LoginComponent {
   ) {}
 
   login() {
-    if (!this.email || !this.password) {
-      alert('Email and password required');
-      return;
-    }
-
-    this.authService.login(this.email, this.password).subscribe({
-      next: (res) => {
+    this.authService.login(this.email(), this.password()).subscribe({
+      next: res => {
         this.authService.saveToken(res.token);
         this.router.navigate(['/students']);
       },
-      error: (err) => {
-        console.error(err);
-        alert('Invalid email or password');
-      }
+      error: () => alert('Invalid email or password')
     });
   }
 }
