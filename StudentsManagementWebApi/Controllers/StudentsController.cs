@@ -11,7 +11,6 @@ namespace StudentsManagementWebApi.Controllers;
 public class StudentsController : ControllerBase
 {
     private readonly IStudentService _studentService;
-
     public StudentsController(IStudentService studentService)
     {
         _studentService = studentService;
@@ -58,6 +57,6 @@ public class StudentsController : ControllerBase
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        return _studentService.Delete(id) ? NoContent() : NotFound();
+        return NoContent();
     }
 }
